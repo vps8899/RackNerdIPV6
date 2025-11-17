@@ -27,3 +27,55 @@ RackNerd（示例机房）等主机商可以为 VPS 分配公网 IPv6（部分�
    ```bash
    wget -O ipv6-prefer.sh https://raw.githubusercontent.com/vps8899/RackNerdIPV6/main/ipv6-prefer.sh
    less ipv6-prefer.sh
+授权并以 root 运行：
+
+bash
+复制代码
+chmod +x ipv6-prefer.sh
+sudo ./ipv6-prefer.sh
+（可选）一键执行（不推荐盲跑，建议先查看脚本）：
+
+bash
+复制代码
+curl -sL https://raw.githubusercontent.com/vps8899/RackNerdIPV6/main/ipv6-prefer.sh | sudo bash
+输出与回滚
+脚本运行前会在 /etc 下创建备份，备份文件名类似：
+/etc/gai.conf.bak.20251117123045（时间戳）
+
+如果你手动想回退：
+
+bash
+复制代码
+sudo cp /etc/gai.conf.bak.<timestamp> /etc/gai.conf
+# 然后重启受影响的服务或直接重启机器
+sudo systemctl restart systemd-resolved || true
+sudo systemctl restart networking || true
+验证脚本是否生效（推荐按顺序执行）
+检查本机是否有全局 IPv6 地址：
+
+bash
+复制代码
+ip -6 addr show scope global
+（若无输出，说明没有公网 IPv6 地址）
+
+测试 IPv6 出站连通性：
+
+bash
+复制代码
+# 优先使用 curl（若已安装）
+curl -6 --connect-timeout 5 -s https://ifconfig.co
+# 或
+curl -6 --connect-timeout 5 -s https://ip.sb
+
+# 若没有 curl，可以尝试 ping6
+ping6 -c1 -W2 google.com
+在脚本运行后再次测试（应返回 IPv6 地址，形如 2a01:...）：
+
+bash
+复制代码
+curl -6 https://ifconfig.co
+检查 /etc/gai.conf 中是否包含脚本添加的标记块（脚本会插入注释标记）：
+
+bash
+复制代码
+grep -n "ipv6-prefer-script" /etc/gai.conf || true
