@@ -21,7 +21,7 @@ DRY_RUN=0
 TEST_ONLY=0
 FORCE=0
 # 默认要强制 IPv6 的域名（包含常见 Google 域）
-DEFAULT_DOMAINS=( "google.com" "accounts.google.com" "www.google.com" "www.googleapis.com" "gemini.google.com" "www.gstatic.com" "clients1.google.com" "clients2.google.com" )
+DEFAULT_DOMAINS=( "google.com" "accounts.google.com" "www.google.com" "www.googleapis.com" "gemini.google.com" "www.gstatic.com" "clients1.google.com" "clients2.google.com" "www.costco.com")
 
 # ---- 工具 ----
 err() { echo -e "\e[31mERROR:\e[0m $*" >&2; }
